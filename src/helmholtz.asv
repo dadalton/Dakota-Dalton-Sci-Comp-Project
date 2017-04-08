@@ -25,8 +25,7 @@ u = zeros(length(x)); %initial values of u to be iterated over
 for j = 1:length(y)
     for i = 1:length(x)
         uprev = u(i,j);
-        u(i,j) = (u(i+1,j) + u(i-1,j) + u(i,j+1) + u(i,j-1) ...
-            - delta^2 * F(i,j)) * (1/(4 - delta^2 * lambda));
+        u(i,j) = u(i+1,j) + u(i-1,j) + u(i,j+1) + u(i,j-1) - delta^2 * F(i,j);
         epsilon = abs((u(i,j)-uprev)/u(i,j));
         if epsilon < 0.01   %terminates iteration for less than 1% change
             break
@@ -34,7 +33,7 @@ for j = 1:length(y)
     end
 end
 
-%u = u * 1/(4 - delta^2 * lambda); %applying constant denominator coefficient
+u = u * 1/(4 - delta^2 * lambda); %applying 
 
 
 
