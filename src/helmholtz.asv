@@ -21,19 +21,27 @@ F = sin(pi * (x - ax)/(bx - ax)) ... %applied force
 %% gauss-seidel method
 
 u = zeros(length(x)); %initial values of u to be iterated over
+u(1,:) = gb;
+u(end,:) = fb;
+u(:,1) = gb(1) + (y-ay)/(by-ay) * (fb(1)-gb(1));
 
-for j = 1:length(y)
-    for i = 1:length(x)
-        uprev = u(i,j);
-        u(i,j) = u(i+1,j) + u(i-1,j) + u(i,j+1) + u(i,j-1) - delta^2 * F(i,j);
-        epsilon = abs((u(i,j)-uprev)/u(i,j));
+
+for i = 2:length(x)-1
+    for j = 2:length(y)-1
+        uprev = u(j,i);
+        u(j,i) = (u(j+1,i) + u(j-1,i) + u(j,i+1) + u(j,i-1) ...
+            - delta^2 * F(j,i));% * (1/(4 - delta^2 * lambda));
+        epsilon = abs((u(j,i)-uprev)/u(j,i));
         if epsilon < 0.01   %terminates iteration for less than 1% change
             break
         end
     end
+    u(
 end
 
-u = u * 1/(4 - delta^2 * lambda); %applying 
+for j = 
+
+%u = u * 1/(4 - delta^2 * lambda); %applying constant denominator coefficient
 
 
 
