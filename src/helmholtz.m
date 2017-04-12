@@ -27,18 +27,20 @@ u(1,:) = gb;
 u(end,:) = fb;
 u(:,1) = gb(1) + (y-ay)/(by-ay) * (fb(1)-gb(1));
 
+iter = 0;
 epsilon = ones(length(x));
 while epsilon > 0.1
     uprev = u;
     for i = 2:length(y)-1
         for j = 2:length(x)-1
             u(j,i) = (u(j+1,i) + u(j-1,i) + u(j,i+1) + u(j,i-1) ...
-                - delta^2 * F(j));% * (1/(4 - delta^2 * lambda));
+                - (delta^2) * F(j)) * (1/(4 - delta^2 * lambda));
         end
-        u(i,end) = 2*u(i,end-1) + u(i+1,end) + u(i-1,end) - delta^2*F(i);
+        u(i,end) = (2*u(i,end-1) + u(i+1,end) + u(i-1,end) - (delta^2)*F(i)) ...
+            * (1/(4 - delta^2 * lambda));
     end
-    u = u * 1/(4 - delta^2 * lambda); %applying constant denominator coefficient
     epsilon = abs(max(max((u-uprev)./u)));
+    iter = iter + 1;
 end
 
 
