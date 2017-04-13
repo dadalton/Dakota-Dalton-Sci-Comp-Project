@@ -2,8 +2,8 @@
 %Scientific Computing - MECE 5397
 %Implementation of Helmholtz Equation in 2D - Semester Project
 %Project code AHc2-1
-clear all; clc;
-%% given values and boundary conditions
+clearvars; clc;
+%% Given values and Boundary Conditions
 ax = -pi; ay = ax; %given domain limits, these form a rectangle
 bx = pi; by = bx;
 
@@ -29,6 +29,7 @@ u(:,1) = gb(1) + (y-ay)/(by-ay) * (fb(1)-gb(1)); %bc for x (left)
 
 iter = 0;                   %used to count number of iterations
 epsilon = ones(length(x));  %calculating relative change per iteration
+
 while epsilon > 0.01
     uprev = u;              %iteration reference
     
@@ -59,6 +60,7 @@ SORu(:,1) = gb(1) + (y-ay)/(by-ay) * (fb(1)-gb(1)); %bc for x (left)
 
 SORiter = 0;                   %used to count number of iterations
 SORepsilon = ones(length(x));  %calculating relative change per iteration
+
 while SORepsilon > 0.01
     SORuprev = SORu;              %iteration reference
     
@@ -80,3 +82,14 @@ while SORepsilon > 0.01
     SORepsilon = abs(max(max((SORu-SORuprev)./SORu)));  
     SORiter = SORiter + 1;                        %counting the iterations
 end
+%% Output & Visualization
+
+disp('Gauss-Seidel iterations:')
+disp(iter)
+disp('Gauss-Seidel iterations with SOR (' + string(SORlambda) + '):')
+disp(SORiter)
+ 
+% subplot(1,2,1)
+% surface(x,y,u)
+% subplot(1,2,2)
+% surface(x,y,SORu)
