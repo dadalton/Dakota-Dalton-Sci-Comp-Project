@@ -8,6 +8,7 @@ ax = -pi; ay = ax; %given domain limits, these form a rectangle
 bx = pi; by = bx;
 
 lambda = 1; %given value for lambda
+%lambda = 0;
 
 delta = 0.1; %step size, same for both x and y
 
@@ -19,6 +20,7 @@ fb = x .* (bx - x).^2;
 
 F = sin(pi * (x - ax)/(bx - ax)) ... %applied force
     .* cos((pi/2)*(2*(y - ay)/(by - ay) + 1));
+%F = 0;
 
 %% Gauss-Seidel/Liebmann method
 
@@ -93,3 +95,8 @@ disp(SORiter)
 % surface(x,y,u)
 % subplot(1,2,2)
 % surface(x,y,SORu)
+
+% contour(x,y,u)
+% contour3(x,y,SORu)
+
+% mesh(x,y,SORu)
