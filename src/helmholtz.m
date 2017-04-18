@@ -10,7 +10,7 @@ bx = pi; by = bx;
 lambda = 1; %given value for lambda
 %lambda = 0;
 
-delta = 0.1; %step size, same for both x and y
+delta = 0.11; %step size, same for both x and y
 
 x = ax:delta:bx;  %discretizing the domain
 y = ay:delta:by;
