@@ -10,7 +10,7 @@ bx = pi; by = bx;
 lambda = 1; %given value for lambda
 %lambda = 0;
 
-delta = 0.11; %step size, same for both x and y
+delta = 0.1; %step size, same for both x and y
 
 x = ax:delta:bx;  %discretizing the domain
 y = ay:delta:by;
@@ -32,6 +32,9 @@ u(:,1) = gb(1) + (y-ay)/(by-ay) * (fb(1)-gb(1)); %bc for x (left)
 iter = 0;                   %used to count number of iterations
 epsilon = ones(length(x));  %calculating relative change per iteration
 
+iterarray = [];
+epsarray = [];
+
 while epsilon > 0.01
     uprev = u;              %iteration reference
     
@@ -49,6 +52,12 @@ while epsilon > 0.01
     %the largest value change in the matrix will determine the epsilon
     epsilon = abs(max(max((u-uprev)./u)));  
     iter = iter + 1;                        %counting the iterations
+    if mod(iter,100) == 0
+        disp(iter)
+        disp(epsilon)
+        iterarray = [iterarray, iter];
+        epsarray = [epsarray, epsilon];
+    end
 end
 
 %% Gauss-Seidel with Successive Overrelaxtion (SOR)
@@ -62,6 +71,9 @@ SORu(:,1) = gb(1) + (y-ay)/(by-ay) * (fb(1)-gb(1)); %bc for x (left)
 
 SORiter = 0;                   %used to count number of iterations
 SORepsilon = ones(length(x));  %calculating relative change per iteration
+
+SORiterarray = [];
+SORepsarray = [];
 
 while SORepsilon > 0.01
     SORuprev = SORu;              %iteration reference
@@ -83,13 +95,20 @@ while SORepsilon > 0.01
     %the largest value change in the matrix will determine the epsilon
     SORepsilon = abs(max(max((SORu-SORuprev)./SORu)));  
     SORiter = SORiter + 1;                        %counting the iterations
+    
+    if mod(SORiter,100) == 0
+        disp(SORiter)
+        disp(SORepsilon)
+        SORiterarray = [SORiterarray, SORiter];
+        SORepsarray = [SORepsarray, SORepsilon];
+    end
 end
 %% Output & Visualization
 
-disp('Gauss-Seidel iterations:')
-disp(iter)
-disp('Gauss-Seidel iterations with SOR (' + string(SORlambda) + '):')
-disp(SORiter)
+% disp('Gauss-Seidel iterations:')
+% disp(iter)
+%disp('Gauss-Seidel iterations with SOR (' + string(SORlambda) + '):')
+% disp(SORiter)
  
 % subplot(1,2,1)
 % surface(x,y,u)
