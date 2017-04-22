@@ -2,15 +2,21 @@
 %Scientific Computing - MECE 5397
 %Implementation of Helmholtz Equation in 2D - Semester Project
 %Project code AHc2-1
-clearvars; clc;
+clearvars; %clc;
 %% Given values and Boundary Conditions
+
+% start = 0.15;
+% step = -0.005;
+% stop = 0.01;
+%for i = start:step:stop
+
 ax = -pi; ay = ax; %given domain limits, these form a rectangle
 bx = pi; by = bx;
 
 lambda = 1; %given value for lambda
 %lambda = 0;
 
-delta = 0.1; %step size, same for both x and y
+delta = 0.015; %step size, same for both x and y
 
 x = ax:delta:bx;  %discretizing the domain
 y = ay:delta:by;
@@ -35,31 +41,61 @@ epsilon = ones(length(x));  %calculating relative change per iteration
 iterarray = [];
 epsarray = [];
 
-while epsilon > 0.01
-    uprev = u;              %iteration reference
-    
-    %sweeping through columns and rows, iterating values
-    for i = 2:length(y)-1
-        for j = 2:length(x)-1
-            u(j,i) = (u(j+1,i) + u(j-1,i) + u(j,i+1) + u(j,i-1) ...
-                - (delta^2) * F(j)) * (1/(4 - delta^2 * lambda));
-        end
-        
-        %right side x bc is a Neumann condition (insulated)
-        u(i,end) = (2*u(i,end-1) + u(i+1,end) + u(i-1,end) - (delta^2)*F(i)) ...
-            * (1/(4 - delta^2 * lambda)); 
-    end
-    %the largest value change in the matrix will determine the epsilon
-    epsilon = abs(max(max((u-uprev)./u)));  
-    iter = iter + 1;                        %counting the iterations
-    if mod(iter,100) == 0
-        disp(iter)
-        disp(epsilon)
-        iterarray = [iterarray, iter];
-        epsarray = [epsarray, epsilon];
-    end
-end
+% ucon = u;
+% loop = 1;
+% dim = size(u);
 
+%while converge1 ~= converge2
+%for i = start:step:stop        
+    %converge2 = converge1;
+    %delta = i
+    
+    while epsilon > 0.01
+        
+        uprev = u;              %iteration reference
+
+        %sweeping through columns and rows, iterating values
+        for i = 2:length(y)-1
+            for j = 2:length(x)-1                
+                u(j,i) = (u(j+1,i) + u(j-1,i) + u(j,i+1) + u(j,i-1) ...
+                          - (delta^2) * F(j)) * (1/(4 - delta^2 * lambda));
+            end
+
+            %right side x bc is a Neumann condition (insulated)
+            u(i,end) = (2*u(i,end-1) + u(i+1,end) + u(i-1,end) - (delta^2)*F(i)) ...
+                       * (1/(4 - delta^2 * lambda)); 
+
+        end
+
+        %the largest value change in the matrix will determine the epsilon
+        epsilon = max(max(abs((u-uprev)./u)));  
+
+        iter = iter + 1;        %counting the iterations
+
+%         if mod(iter,100) == 0
+%             disp(iter)
+%             disp(epsilon)
+%             iterarray = [iterarray, iter];
+%             epsarray = [epsarray, epsilon];
+%         end
+       
+    end
+    disp(min(min(u)))
+%     loop = loop + 1;
+    
+%     ucon = [ucon, u];
+%     
+%     rowsub  = 1:dim(1);
+%     colsub1 = (loop - 1) * dim(2) + 1 : loop * dim(2);
+%     colsub2 = (loop - 2) * dim(2) + 1 : (loop - 1) * dim(2);   
+%         
+%     if ucon(rowsub,colsub1) == ucon(rowsub, colsub2) ...
+%        & isfinite(ucon(rowsub, colsub1)) 
+%         disp(start-loop*abs(step))
+%         break
+%     end
+    
+%end
 %% Gauss-Seidel with Successive Overrelaxtion (SOR)
 
 SORlambda = 1.2;         %coefficient to expedite convergence
@@ -74,6 +110,8 @@ SORepsilon = ones(length(x));  %calculating relative change per iteration
 
 SORiterarray = [];
 SORepsarray = [];
+
+
 
 while SORepsilon > 0.01
     SORuprev = SORu;              %iteration reference
@@ -94,14 +132,16 @@ while SORepsilon > 0.01
     end
     %the largest value change in the matrix will determine the epsilon
     SORepsilon = abs(max(max((SORu-SORuprev)./SORu)));  
+    
     SORiter = SORiter + 1;                        %counting the iterations
     
-    if mod(SORiter,100) == 0
-        disp(SORiter)
-        disp(SORepsilon)
-        SORiterarray = [SORiterarray, SORiter];
-        SORepsarray = [SORepsarray, SORepsilon];
-    end
+%     if mod(SORiter,100) == 0
+%         disp(SORiter)
+%         disp(SORepsilon)
+%         SORiterarray = [SORiterarray, SORiter];
+%         SORepsarray = [SORepsarray, SORepsilon];
+%     end
+    
 end
 %% Output & Visualization
 
