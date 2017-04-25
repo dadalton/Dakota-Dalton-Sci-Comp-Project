@@ -1,8 +1,9 @@
+function [ u, SORu ] = helmholtzfun( delta )
 %Dakota Dalton - 1366027
 %Scientific Computing - MECE 5397
 %Implementation of Helmholtz Equation in 2D - Semester Project
 %Project code AHc2-1
-clearvars; %clc;
+%clearvars; %clc;
 %% Given values and Boundary Conditions
 
 % start = 0.15;
@@ -16,38 +17,24 @@ bx = pi; by = bx;
 lambda = 1; %given value for lambda
 %lambda = 0;
 
-delta = 0.1; %step size, same for both x and y
+%delta = 0.015; %step size, same for both x and y
 
 x = ax:delta:bx;  %discretizing the domain
 y = ay:delta:by;
 
-% gb = (bx-x).^2 .* cos((pi*x)/bx); %boundary conditions for y
-% fb = x .* (bx - x).^2;
+gb = (bx-x).^2 .* cos((pi*x)/bx); %boundary conditions for y
+fb = x .* (bx - x).^2;
 
-fbana = -0.33 * cos(x);
-
-
-% F = sin(pi * (x - ax)/(bx - ax)) ... %applied force
-%     * cos((pi/2)*(2*(y - ay)/(by - ay) + 1));
+F = sin(pi * (x - ax)/(bx - ax)) ... %applied force
+    .* cos((pi/2)*(2*(y - ay)/(by - ay) + 1));
 %F = 0;
-
-% F1 = sin(pi * (x - ax)/(bx - ax));
-% F2 = cos((pi/2)*(2*(y - ay)/(by - ay) + 1));
-% F = F1' * F2;
-
-a = 1;
-
-F = sin(a*y)' * cos(0.5*x);
-
-uana = F / (lambda - a - 0.25); 
 
 %% Gauss-Seidel/Liebmann method
 
 u = zeros(length(x)); %initial values of u to be iterated over
-%u(1,:) = gb;          %boundary condition for y (bottom)
-u(end,:) = fbana;        %boundary condition for y (top)
-%u(end,:) = fb;        %boundary condition for y (top)
-%u(:,1) = gb(1) + (y-ay)/(by-ay) * (fb(1)-gb(1)); %bc for x (left)
+u(1,:) = gb;          %boundary condition for y (bottom)
+u(end,:) = fb;        %boundary condition for y (top)
+u(:,1) = gb(1) + (y-ay)/(by-ay) * (fb(1)-gb(1)); %bc for x (left)
 
 iter = 0;                   %used to count number of iterations
 epsilon = ones(length(x));  %calculating relative change per iteration
@@ -72,12 +59,12 @@ epsarray = [];
         for i = 2:length(y)-1
             for j = 2:length(x)-1                
                 u(j,i) = (u(j+1,i) + u(j-1,i) + u(j,i+1) + u(j,i-1) ...
-                          - (delta^2) * F(j,i)) * (1/(4 - delta^2 * lambda));
+                          - (delta^2) * F(j)) * (1/(4 - delta^2 * lambda));
             end
 
             %right side x bc is a Neumann condition (insulated)
-            u(i,end) = (2*u(i,end-1) + u(i+1,end) + u(i-1,end) - (delta^2)*F(i,end)) ...
-                      * (1/(4 - delta^2 * lambda)); 
+            u(i,end) = (2*u(i,end-1) + u(i+1,end) + u(i-1,end) - (delta^2)*F(i)) ...
+                       * (1/(4 - delta^2 * lambda)); 
 
         end
 
@@ -94,11 +81,7 @@ epsarray = [];
 %         end
        
     end
-    subplot(1,2,1)
-    surface(u)
-    subplot(1,2,2)
-    surface(uana)
-    disp(min(min(u)))
+    %disp(min(min(u)))
 %     loop = loop + 1;
     
 %     ucon = [ucon, u];
@@ -177,3 +160,5 @@ end
 % contour3(x,y,SORu)
 
 % mesh(x,y,SORu)
+end
+
