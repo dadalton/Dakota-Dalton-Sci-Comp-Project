@@ -16,7 +16,7 @@ bx = pi; by = bx;
 lambda = 1; %given value for lambda
 %lambda = 0;
 
-delta = 0.01; %step size, same for both x and y
+delta = 0.1; %step size, same for both x and y
 
 x = ax:delta:bx;  %discretizing the domain
 y = ay:delta:by;
@@ -29,8 +29,8 @@ fb = x .* (bx - x).^2;
 constcoeff = 1/(4 - ((delta^2) * lambda));
 
 F = sin(pi * (x - ax)/(bx - ax))' ... %applied force
-  * cos((pi/2)*(2*(y - ay)/(by - ay) + 1));
-%F = zeros(length(y),length(x));
+    * cos((pi/2)*(2*(y - ay)/(by - ay) + 1));
+% F = zeros(length(y),length(x));
 
 % a = 1;                            %analytical solution w/different conditions
 % Fana = sin(a*y)' * cos(0.5*x);
@@ -62,7 +62,8 @@ epsilon = ones(length(x));  %calculating relative change per iteration
     %converge2 = converge1;
     %delta = i
     
-    while iter < 10000 %epsilon > 0.01
+    %while iter < 1000 
+    while epsilon > 0.01    
         
         uprev = u;              %iteration reference
 
@@ -166,7 +167,7 @@ while SORepsilon > 0.01
 %         SORiterarray = [SORiterarray, SORiter];
 %         SORepsarray = [SORepsarray, SORepsilon];
 %     end
-    
+    surf(x,y,SORu)
 end
 %% Output & Visualization
 
