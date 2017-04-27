@@ -23,6 +23,7 @@ y = ay:delta:by;
 
 gb = (bx-x).^2 .* cos((pi*x)/bx); %boundary conditions for y
 fb = x .* (bx - x).^2;
+hb =  gb(1) + (y-ay)/(by-ay) * (fb(1)-gb(1)); %bc for x
 
 %fbana = -0.33 * cos(x);
 
@@ -41,7 +42,7 @@ F = sin(pi * (x - ax)/(bx - ax))' ... %applied force
 u = zeros(length(x)); %initial values of u to be iterated over
 u(1,:) = gb;          %boundary condition for y (bottom)
 u(end,:) = fb;        %boundary condition for y (top)
-u(:,1) = gb(1) + (y-ay)/(by-ay) * (fb(1)-gb(1)); %bc for x (left)
+u(:,1) = hb; %bc for x (left)
 
 % plot(u(1,:))
 % plot(u(end,:))
@@ -50,6 +51,7 @@ u(:,1) = gb(1) + (y-ay)/(by-ay) * (fb(1)-gb(1)); %bc for x (left)
 iter = 0;                   %used to count number of iterations
 epsilon = ones(length(x));  %calculating relative change per iteration
 
+iterlabel = [];
 % iterarray = [];
 % epsarray = [];
 
@@ -62,8 +64,8 @@ epsilon = ones(length(x));  %calculating relative change per iteration
     %converge2 = converge1;
     %delta = i
     
-    %while iter < 1000 
-    while epsilon > 0.01    
+    while iter < 5000 
+%     while epsilon > 0.01    
         
         uprev = u;              %iteration reference
 
@@ -88,11 +90,20 @@ epsilon = ones(length(x));  %calculating relative change per iteration
         
         
         iter = iter + 1;        %counting the iterations
-
-%         if mod(iter,100) == 0
+        
+        if mod(iter,1000) == 0
 %             surface(x,y,u)
 %             pause
-%         end
+             iterlabel = [iterlabel, string(iter)];
+             hold on
+             plot(y, u(:,end))
+             title(legend(iterlabel), '# iterations')
+             xlabel('y')
+             xlim([-4,5.5])
+             ylabel('u(y)')
+             title('Neumann boundary condition du/dx(x=bx,y) = 0')
+             grid on
+        end
         
 %         if mod(iter,100) == 0
 %             disp(iter)
@@ -103,7 +114,7 @@ epsilon = ones(length(x));  %calculating relative change per iteration
        
     end
 %     subplot(1,2,1)
-    surface(x,y,u)
+%     surface(x,y,u)
 %     subplot(1,2,2)
 %     surface(uana)
 %     disp(min(min(u)))
@@ -185,3 +196,27 @@ end
 % contour3(x,y,SORu)
 
 % mesh(x,y,SORu)
+
+% plot(x, gb)
+% xlabel('x')
+% ylabel('u(x)')
+% title('Dirichlet boundary condition u(x,y=ay) = gb(x)')
+% grid on
+
+% plot(x, fb)
+% xlabel('x')
+% ylabel('u(x)')
+% title('Dirichlet boundary condition u(x,y=ay) = fb(x)')
+% grid on
+
+% plot(y, hb)
+% xlabel('y')
+% ylabel('u(y)')
+% title('Dirichlet boundary condition u(x=ax,y) = hb(y)')
+% grid on
+
+plot(y, u(:,end))
+xlabel('y')
+ylabel('u(y)')
+title('Neumann boundary condition du/dx(x=bx,y) = 0')
+grid on
