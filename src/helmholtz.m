@@ -13,10 +13,10 @@ clearvars; %clc;
 ax = -pi; ay = ax; %given domain limits, these form a rectangle
 bx = pi; by = bx;
 
-%lambda = 1; %given value for lambda
-lambda = 0;
+lambda = 1; %given value for lambda
+%lambda = 0;
 
-delta = 0.025; %step size, same for both x and y
+delta = 0.15; %step size, same for both x and y
 
 x = ax:delta:bx;  %discretizing the domain
 y = ay:delta:by;
@@ -231,8 +231,8 @@ end
 % zlabel('u')
 % grid on
 % legend(string(iter) + ' iterations','location','best')
-% view(-120,30)
-% title('Poisson Equation, \lambda = 0, F = F(x,y), \Delta = 0.025')
+% view(45,30)
+% title('Helmholtz Equation, \lambda = 1, F = F(x,y), \Delta = ' + string(delta))
      
 % contour(x,y,u,15)
 % xlabel('x')
@@ -240,7 +240,7 @@ end
 % grid on
 % legend(string(iter) + ' iterations')
 % colorbar
-% title('Poisson Equation, \lambda = 0, F = F(x,y), \Delta = 0.025')
+% title('Helmholtz Equation, \lambda = 0, F = F(x,y), ' + string(delta))
 
 % mesh(x,y,SORu)
 % xlabel('x')
@@ -249,7 +249,7 @@ end
 % grid on
 % legend(string(SORiter) + ' iterations','location','best')
 % view(-120,37.5)
-% title('Poisson Equation with SOR, SOR\lambda = 1.2, \lambda = 0, F = F(x,y), \Delta = 0.025')
+% title('Helmholtz Equation with SOR, SOR\lambda = 1.2, \lambda = 0, F = F(x,y), ' + string(delta))
 
 % contour(x,y,SORu,15)
 % xlabel('x')
@@ -257,18 +257,18 @@ end
 % grid on
 % legend(string(SORiter) + ' iterations')
 % colorbar
-% title('Poisson Equation with SOR, SOR\lambda = 1.2, \lambda = 0, F = F(x,y), \Delta = 0.025')
+% title('Helmholtz Equation with SOR, SOR\lambda = 1.2, \lambda = 0, F = F(x,y), ' + string(delta))
 
-disp('Max u:')
-max(max(u))
-disp('Mean u:')
-mean(mean(u))
-disp('Min u:')
-min(min(u))
-
-disp('Max SORu:')
-max(max(SORu))
-disp('Mean SORu:')
-mean(mean(SORu))
-disp('Min SORu:')
-min(min(SORu))
+% disp('Max u:')
+% max(max(u))
+% disp('Mean u:')
+% mean(mean(u))
+% disp('Min u:')
+% min(min(u))
+% 
+% disp('Max SORu:')
+% max(max(SORu))
+% disp('Mean SORu:')
+% mean(mean(SORu))
+% disp('Min SORu:')
+% min(min(SORu))
