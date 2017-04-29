@@ -13,16 +13,17 @@ clearvars; %clc;
 ax = -pi; ay = ax; %given domain limits, these form a rectangle
 bx = pi; by = bx;
 
-lambda = 1; %given value for lambda
-%lambda = 0;
+%lambda = 1; %given value for lambda
+lambda = 0;
 
-delta = 0.1; %step size, same for both x and y
+delta = 0.25; %step size, same for both x and y
 
 x = ax:delta:bx;  %discretizing the domain
 y = ay:delta:by;
 
 gb = (bx-x).^2 .* cos((pi*x)/bx); %boundary conditions for y
 fb = x .* (bx - x).^2;
+hb =  gb(1) + (y-ay)/(by-ay) * (fb(1)-gb(1)); %bc for x
 
 %fbana = -0.33 * cos(x);
 
@@ -30,18 +31,20 @@ constcoeff = 1/(4 - ((delta^2) * lambda));
 
 F = sin(pi * (x - ax)/(bx - ax))' ... %applied force
     * cos((pi/2)*(2*(y - ay)/(by - ay) + 1));
-% F = zeros(length(y),length(x));
+%F = zeros(length(y),length(x));
 
 % a = 1;                            %analytical solution w/different conditions
 % Fana = sin(a*y)' * cos(0.5*x);
 % uana = Fana / (lambda - a - 0.25); 
+
+
 
 %% Gauss-Seidel/Liebmann method
 
 u = zeros(length(x)); %initial values of u to be iterated over
 u(1,:) = gb;          %boundary condition for y (bottom)
 u(end,:) = fb;        %boundary condition for y (top)
-u(:,1) = gb(1) + (y-ay)/(by-ay) * (fb(1)-gb(1)); %bc for x (left)
+u(:,1) = hb; %bc for x (left)
 
 % plot(u(1,:))
 % plot(u(end,:))
@@ -50,6 +53,7 @@ u(:,1) = gb(1) + (y-ay)/(by-ay) * (fb(1)-gb(1)); %bc for x (left)
 iter = 0;                   %used to count number of iterations
 epsilon = ones(length(x));  %calculating relative change per iteration
 
+iterlabel = [];
 % iterarray = [];
 % epsarray = [];
 
@@ -62,7 +66,7 @@ epsilon = ones(length(x));  %calculating relative change per iteration
     %converge2 = converge1;
     %delta = i
     
-    %while iter < 1000 
+%     while iter < 5000 
     while epsilon > 0.01    
         
         uprev = u;              %iteration reference
@@ -88,10 +92,19 @@ epsilon = ones(length(x));  %calculating relative change per iteration
         
         
         iter = iter + 1;        %counting the iterations
-
-%         if mod(iter,100) == 0
-%             surface(x,y,u)
-%             pause
+        
+%         if mod(iter,1000) == 0
+% %             surface(x,y,u)
+% %             pause
+%              iterlabel = [iterlabel, string(iter)];
+%              hold on
+%              plot(y, u(:,end))
+%              title(legend(iterlabel), '# iterations')
+%              xlabel('y')
+%              xlim([-4,5.5])
+%              ylabel('u(y)')
+%              title('Neumann boundary condition du/dx(x=bx,y) = 0')
+%              grid on
 %         end
         
 %         if mod(iter,100) == 0
@@ -103,7 +116,7 @@ epsilon = ones(length(x));  %calculating relative change per iteration
        
     end
 %     subplot(1,2,1)
-    surface(x,y,u)
+  
 %     subplot(1,2,2)
 %     surface(uana)
 %     disp(min(min(u)))
@@ -129,7 +142,7 @@ SORlambda = 1.2;         %coefficient to expedite convergence
 SORu = zeros(length(x)); %initial values of u to be iterated over
 SORu(1,:) = gb;          %boundary condition for y (bottom)
 SORu(end,:) = fb;        %boundary condition for y (top)
-SORu(:,1) = gb(1) + (y-ay)/(by-ay) * (fb(1)-gb(1)); %bc for x (left)
+SORu(:,1) = hb; %bc for x (left)
 
 SORiter = 0;                   %used to count number of iterations
 SORepsilon = ones(length(x));  %calculating relative change per iteration
@@ -167,8 +180,10 @@ while SORepsilon > 0.01
 %         SORiterarray = [SORiterarray, SORiter];
 %         SORepsarray = [SORepsarray, SORepsilon];
 %     end
-    surf(x,y,SORu)
+     
 end
+
+    
 %% Output & Visualization
 
 % disp('Gauss-Seidel iterations:')
@@ -185,3 +200,75 @@ end
 % contour3(x,y,SORu)
 
 % mesh(x,y,SORu)
+
+% plot(x, gb)
+% xlabel('x')
+% ylabel('u(x)')
+% title('Dirichlet boundary condition u(x,y=ay) = gb(x)')
+% grid on
+
+% plot(x, fb)
+% xlabel('x')
+% ylabel('u(x)')
+% title('Dirichlet boundary condition u(x,y=ay) = fb(x)')
+% grid on
+
+% plot(y, hb)
+% xlabel('y')
+% ylabel('u(y)')
+% title('Dirichlet boundary condition u(x=ax,y) = hb(y)')
+% grid on
+
+% plot(y, u(:,end))
+% xlabel('y')
+% ylabel('u(y)')
+% title('Neumann boundary condition du/dx(x=bx,y) = 0')
+% grid on
+
+% mesh(x,y,u) 
+% xlabel('x')
+% ylabel('y')
+% zlabel('u')
+% grid on
+% legend(string(iter) + ' iterations','location','best')
+% view(-120,30)
+% title('Poisson Equation, \lambda = 0, F = F(x,y), \Delta = 0.25')
+     
+% contour(x,y,u,15)
+% xlabel('x')
+% ylabel('y')
+% grid on
+% legend(string(iter) + ' iterations')
+% colorbar
+% title('Poisson Equation, \lambda = 0, F = F(x,y), \Delta = 0.25')
+
+% mesh(x,y,SORu)
+% xlabel('x')
+% ylabel('y')
+% zlabel('u')
+% grid on
+% legend(string(SORiter) + ' iterations','location','best')
+% view(-120,37.5)
+% title('Poisson Equation with SOR, SOR\lambda = 1.2, \lambda = 0, F = F(x,y), \Delta = 0.25')
+
+% contour(x,y,SORu,15)
+% xlabel('x')
+% ylabel('y')
+% grid on
+% legend(string(SORiter) + ' iterations')
+% colorbar
+% title('Poisson Equation with SOR, SOR\lambda = 1.2, \lambda = 0, F = F(x,y), \Delta = 0.25')
+
+% disp('Max u:')
+% max(max(u))
+% disp('Mean u:')
+% mean(mean(u))
+% disp('Min u:')
+% min(min(u))
+% 
+% disp('Max SORu:')
+% max(max(SORu))
+% disp('Mean SORu:')
+% mean(mean(SORu))
+% disp('Min SORu:')
+% min(min(SORu))
