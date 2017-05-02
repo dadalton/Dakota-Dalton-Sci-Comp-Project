@@ -2,7 +2,7 @@
 %Scientific Computing - MECE 5397
 %Implementation of Helmholtz Equation in 2D - Semester Project
 %Project code AHc2-1
-clearvars; %clc;
+clearvars; clc;
 %% Given values and Boundary Conditions
 
 % start = 0.15;
@@ -16,7 +16,7 @@ bx = pi; by = bx;
 lambda = 1; %given value for lambda
 %lambda = 0;
 
-delta = 0.15; %step size, same for both x and y
+delta = 0.00625; %step size, same for both x and y
 
 x = ax:delta:bx;  %discretizing the domain
 y = ay:delta:by;
@@ -225,50 +225,54 @@ end
 % title('Neumann boundary condition du/dx(x=bx,y) = 0')
 % grid on
 
-% mesh(x,y,u) 
-% xlabel('x')
-% ylabel('y')
-% zlabel('u')
-% grid on
-% legend(string(iter) + ' iterations','location','best')
-% view(45,30)
-% title('Helmholtz Equation, \lambda = 1, F = F(x,y), \Delta = ' + string(delta))
-     
-% contour(x,y,u,15)
-% xlabel('x')
-% ylabel('y')
-% grid on
-% legend(string(iter) + ' iterations')
-% colorbar
-% title('Helmholtz Equation, \lambda = 0, F = F(x,y), ' + string(delta))
+figure
+mesh(x,y,u) 
+xlabel('x')
+ylabel('y')
+zlabel('u')
+grid on
+legend(string(iter) + ' iterations','location','best')
+view(45,30)
+title('Helmholtz Equation, \lambda = 1, F = F(x,y), \Delta = ' + string(delta))
 
-% mesh(x,y,SORu)
-% xlabel('x')
-% ylabel('y')
-% zlabel('u')
-% grid on
-% legend(string(SORiter) + ' iterations','location','best')
-% view(-120,37.5)
-% title('Helmholtz Equation with SOR, SOR\lambda = 1.2, \lambda = 0, F = F(x,y), ' + string(delta))
+figure
+contour(x,y,u,15)
+xlabel('x')
+ylabel('y')
+grid on
+legend(string(iter) + ' iterations')
+colorbar
+title('Helmholtz Equation, \lambda = 1, F = F(x,y), \Delta = ' + string(delta))
 
-% contour(x,y,SORu,15)
-% xlabel('x')
-% ylabel('y')
-% grid on
-% legend(string(SORiter) + ' iterations')
-% colorbar
-% title('Helmholtz Equation with SOR, SOR\lambda = 1.2, \lambda = 0, F = F(x,y), ' + string(delta))
+figure
+mesh(x,y,SORu)
+xlabel('x')
+ylabel('y')
+zlabel('u')
+grid on
+legend(string(SORiter) + ' iterations','location','best')
+view(45,30)
+title('Helmholtz Equation with SOR, SOR\lambda = ' + string(SORlambda) + ', \lambda = 1, F = F(x,y), \Delta = ' + string(delta))
 
-% disp('Max u:')
-% max(max(u))
-% disp('Mean u:')
-% mean(mean(u))
-% disp('Min u:')
-% min(min(u))
-% 
-% disp('Max SORu:')
-% max(max(SORu))
-% disp('Mean SORu:')
-% mean(mean(SORu))
-% disp('Min SORu:')
-% min(min(SORu))
+figure
+contour(x,y,SORu,15)
+xlabel('x')
+ylabel('y')
+grid on
+legend(string(SORiter) + ' iterations')
+colorbar
+title('Helmholtz Equation with SOR, ' + string(SORlambda) + ', \lambda = 1, F = F(x,y), \Delta = ' + string(delta))
+
+disp('Max u:')
+max(max(u))
+disp('Mean u:')
+mean(mean(u))
+disp('Min u:')
+min(min(u))
+
+disp('Max SORu:')
+max(max(SORu))
+disp('Mean SORu:')
+mean(mean(SORu))
+disp('Min SORu:')
+min(min(SORu))
