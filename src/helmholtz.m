@@ -13,10 +13,10 @@ clearvars; clc;
 ax = -pi; ay = ax; %given domain limits, these form a rectangle
 bx = pi; by = bx;
 
-lambda = 1; %given value for lambda
-%lambda = 0;
+lambda = -1; %given value for lambda
+% lambda = 0;
 
-delta = 0.00625; %step size, same for both x and y
+delta = 0.1; %step size, same for both x and y
 
 x = ax:delta:bx;  %discretizing the domain
 y = ay:delta:by;
@@ -54,8 +54,8 @@ iter = 0;                   %used to count number of iterations
 epsilon = ones(length(x));  %calculating relative change per iteration
 
 iterlabel = [];
-% iterarray = [];
-% epsarray = [];
+iterarray = [];
+epsarray = [];
 
 % ucon = u;
 % loop = 1;
@@ -74,8 +74,7 @@ iterlabel = [];
         %sweeping through columns and rows, iterating values
         for i = 2:length(x)-1
             for j = 2:length(y)-1        
-                
-                u(j,i) = (u(j+1,i) + u(j-1,i) + u(j,i+1) + u(j,i-1) ...
+                    u(j,i) = (u(j+1,i) + u(j-1,i) + u(j,i+1) + u(j,i-1) ...
                           - ((delta^2) * F(j,i))) * constcoeff;
                 %disp(u(1,:))
         
@@ -107,12 +106,12 @@ iterlabel = [];
 %              grid on
 %         end
         
-%         if mod(iter,100) == 0
+        if mod(iter,10) == 0
 %             disp(iter)
 %             disp(epsilon)
-%             iterarray = [iterarray, iter];
-%             epsarray = [epsarray, epsilon];
-%         end
+            iterarray = [iterarray, iter];
+            epsarray = [epsarray, epsilon];
+        end
        
     end
 %     subplot(1,2,1)
@@ -174,15 +173,16 @@ while SORepsilon > 0.01
     
     SORiter = SORiter + 1;                        %counting the iterations
     
-%     if mod(SORiter,100) == 0
-%         disp(SORiter)
-%         disp(SORepsilon)
+%     if mod(SORiter,10) == 0
+% %         disp(SORiter)
+% %         disp(SORepsilon)
 %         SORiterarray = [SORiterarray, SORiter];
 %         SORepsarray = [SORepsarray, SORepsilon];
 %     end
-     
+%      
 end
 
+disp(SORiter)
     
 %% Output & Visualization
 
@@ -210,7 +210,7 @@ end
 % plot(x, fb)
 % xlabel('x')
 % ylabel('u(x)')
-% title('Dirichlet boundary condition u(x,y=ay) = fb(x)')
+% title('Dirichlet boundary condition u(x,y=by) = fb(x)')
 % grid on
 
 % plot(y, hb)
@@ -225,44 +225,44 @@ end
 % title('Neumann boundary condition du/dx(x=bx,y) = 0')
 % grid on
 
-figure
-mesh(x,y,u) 
-xlabel('x')
-ylabel('y')
-zlabel('u')
-grid on
-legend(string(iter) + ' iterations','location','best')
-view(45,30)
-title('Helmholtz Equation, \lambda = 1, F = F(x,y), \Delta = ' + string(delta))
-
-figure
-contour(x,y,u,15)
-xlabel('x')
-ylabel('y')
-grid on
-legend(string(iter) + ' iterations')
-colorbar
-title('Helmholtz Equation, \lambda = 1, F = F(x,y), \Delta = ' + string(delta))
-
-figure
-mesh(x,y,SORu)
-xlabel('x')
-ylabel('y')
-zlabel('u')
-grid on
-legend(string(SORiter) + ' iterations','location','best')
-view(45,30)
-title('Helmholtz Equation with SOR, SOR\lambda = ' + string(SORlambda) + ', \lambda = 1, F = F(x,y), \Delta = ' + string(delta))
-
-figure
-contour(x,y,SORu,15)
-xlabel('x')
-ylabel('y')
-grid on
-legend(string(SORiter) + ' iterations')
-colorbar
-title('Helmholtz Equation with SOR, ' + string(SORlambda) + ', \lambda = 1, F = F(x,y), \Delta = ' + string(delta))
-
+% figure
+% mesh(x,y,u) 
+% xlabel('x')
+% ylabel('y')
+% zlabel('u')
+% grid on
+% legend(string(iter) + ' iterations','location','best')
+% view(-120,30)
+% title('Helmholtz Equation, \lambda = ' + string(lambda) +', F = F(x,y), \Delta = ' + string(delta))
+% 
+% figure
+% contour(x,y,u,15)
+% xlabel('x')
+% ylabel('y')
+% grid on
+% legend(string(iter) + ' iterations')
+% colorbar
+% title('Helmholtz Equation, \lambda = ' + string(lambda) + ', F = F(x,y), \Delta = ' + string(delta))
+% 
+% figure
+% mesh(x,y,SORu)
+% xlabel('x')
+% ylabel('y')
+% zlabel('u')
+% grid on
+% legend(string(SORiter) + ' iterations','location','best')
+% view(-120,30)
+% title('Helmholtz Equation with SOR, SOR\lambda = ' + string(SORlambda) + ', \lambda = ' + string(lambda) +', F = F(x,y), \Delta = ' + string(delta))
+% % 
+% figure
+% contour(x,y,SORu,15)
+% xlabel('x')
+% ylabel('y')
+% grid on
+% legend(string(SORiter) + ' iterations')
+% colorbar
+% title('Helmholtz Equation with SOR, ' + string(SORlambda) + ', \lambda = ' + string(lambda) +', F = F(x,y), \Delta = ' + string(delta))
+% 
 disp('Max u:')
 max(max(u))
 disp('Mean u:')
@@ -276,3 +276,29 @@ disp('Mean SORu:')
 mean(mean(SORu))
 disp('Min SORu:')
 min(min(SORu))
+
+% figure
+% mesh(x,y,F) 
+% xlabel('x')
+% ylabel('y')
+% zlabel('F')
+% grid on
+% legend(string(iter) + ' iterations','location','best')
+% view(45,30)
+% title('F(x,y)')
+
+% plot(iterarray, epsarray)
+% xlabel('# Iterations')
+% ylabel('Error (Infinity norm)')
+% title('Error over iterations')
+% grid on
+% 
+% hold on
+% 
+% plot(SORiterarray, SORepsarray)
+% xlabel('# Iterations')
+% ylabel('Error (Infinity norm)')
+% title('Error over iterations, \Delta = ' + string(delta))
+% legend('Gauss-Seidel,  ' + string(iter) + ' iterations', 'SOR \lambda = 1.2,   ' + string(SORiter) + ' iterations')
+% ylim([0 150])
+% grid on
