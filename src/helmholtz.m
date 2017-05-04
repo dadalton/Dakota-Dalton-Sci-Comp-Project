@@ -13,7 +13,7 @@ clearvars; clc;
 ax = -pi; ay = ax; %given domain limits, these form a rectangle
 bx = pi; by = bx;
 
-lambda = -1; %given value for lambda
+lambda = 1; %given value for lambda
 % lambda = 0;
 
 delta = 0.1; %step size, same for both x and y
@@ -106,7 +106,7 @@ epsarray = [];
 %              grid on
 %         end
         
-        if mod(iter,10) == 0
+        if mod(iter,1) == 0
 %             disp(iter)
 %             disp(epsilon)
             iterarray = [iterarray, iter];
@@ -173,12 +173,12 @@ while SORepsilon > 0.01
     
     SORiter = SORiter + 1;                        %counting the iterations
     
-%     if mod(SORiter,10) == 0
-% %         disp(SORiter)
-% %         disp(SORepsilon)
-%         SORiterarray = [SORiterarray, SORiter];
-%         SORepsarray = [SORepsarray, SORepsilon];
-%     end
+    if mod(SORiter,1) == 0
+%         disp(SORiter)
+%         disp(SORepsilon)
+        SORiterarray = [SORiterarray, SORiter];
+        SORepsarray = [SORepsarray, SORepsilon];
+    end
 %      
 end
 
@@ -262,20 +262,20 @@ disp(SORiter)
 % legend(string(SORiter) + ' iterations')
 % colorbar
 % title('Helmholtz Equation with SOR, ' + string(SORlambda) + ', \lambda = ' + string(lambda) +', F = F(x,y), \Delta = ' + string(delta))
+% % 
+% disp('Max u:')
+% max(max(u))
+% disp('Mean u:')
+% mean(mean(u))
+% disp('Min u:')
+% min(min(u))
 % 
-disp('Max u:')
-max(max(u))
-disp('Mean u:')
-mean(mean(u))
-disp('Min u:')
-min(min(u))
-
-disp('Max SORu:')
-max(max(SORu))
-disp('Mean SORu:')
-mean(mean(SORu))
-disp('Min SORu:')
-min(min(SORu))
+% disp('Max SORu:')
+% max(max(SORu))
+% disp('Mean SORu:')
+% mean(mean(SORu))
+% disp('Min SORu:')
+% min(min(SORu))
 
 % figure
 % mesh(x,y,F) 
@@ -287,18 +287,18 @@ min(min(SORu))
 % view(45,30)
 % title('F(x,y)')
 
-% plot(iterarray, epsarray)
-% xlabel('# Iterations')
-% ylabel('Error (Infinity norm)')
-% title('Error over iterations')
-% grid on
+plot(iterarray, epsarray)
+xlabel('# Iterations')
+ylabel('Error (Infinity norm)')
+title('Error over iterations')
+grid on
 % 
-% hold on
+hold on
 % 
-% plot(SORiterarray, SORepsarray)
-% xlabel('# Iterations')
-% ylabel('Error (Infinity norm)')
-% title('Error over iterations, \Delta = ' + string(delta))
-% legend('Gauss-Seidel,  ' + string(iter) + ' iterations', 'SOR \lambda = 1.2,   ' + string(SORiter) + ' iterations')
-% ylim([0 150])
-% grid on
+plot(SORiterarray, SORepsarray)
+xlabel('# Iterations')
+ylabel('Error (Infinity norm)')
+title('Error over iterations, \Delta = ' + string(delta))
+legend('Gauss-Seidel,  ' + string(iter) + ' iterations', 'SOR \lambda = 1.2,   ' + string(SORiter) + ' iterations')
+ylim([0 100])
+grid on

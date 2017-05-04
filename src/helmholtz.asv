@@ -16,7 +16,7 @@ bx = pi; by = bx;
 lambda = 1; %given value for lambda
 % lambda = 0;
 
-delta = 0.025; %step size, same for both x and y
+delta = 0.1; %step size, same for both x and y
 
 x = ax:delta:bx;  %discretizing the domain
 y = ay:delta:by;
@@ -136,7 +136,7 @@ epsarray = [];
 %end
 %% Gauss-Seidel with Successive Overrelaxtion (SOR)
 
-SORlambda = 1.3;         %coefficient to expedite convergence
+SORlambda = 1.2;         %coefficient to expedite convergence
 
 SORu = zeros(length(x)); %initial values of u to be iterated over
 SORu(1,:) = gb;          %boundary condition for y (bottom)
@@ -225,57 +225,57 @@ disp(SORiter)
 % title('Neumann boundary condition du/dx(x=bx,y) = 0')
 % grid on
 
-% figure
-% mesh(x,y,u) 
-% xlabel('x')
-% ylabel('y')
-% zlabel('u')
-% grid on
-% legend(string(iter) + ' iterations','location','best')
-% view(45,30)
-% title('Helmholtz Equation, \lambda = ' + string(lambda) +', F = F(x,y), \Delta = ' + string(delta))
+figure
+mesh(x,y,u) 
+xlabel('x')
+ylabel('y')
+zlabel('u')
+grid on
+legend(string(iter) + ' iterations','location','best')
+view(-120,30)
+title('Helmholtz Equation, \lambda = ' + string(lambda) +', F = F(x,y), \Delta = ' + string(delta))
+
+figure
+contour(x,y,u,15)
+xlabel('x')
+ylabel('y')
+grid on
+legend(string(iter) + ' iterations')
+colorbar
+title('Helmholtz Equation, \lambda = ' + string(lambda) + ', F = F(x,y), \Delta = ' + string(delta))
+
+figure
+mesh(x,y,SORu)
+xlabel('x')
+ylabel('y')
+zlabel('u')
+grid on
+legend(string(SORiter) + ' iterations','location','best')
+view(-120,30)
+title('Helmholtz Equation with SOR, SOR\lambda = ' + string(SORlambda) + ', \lambda = ' + string(lambda) +', F = F(x,y), \Delta = ' + string(delta))
 % 
-% figure
-% contour(x,y,u,15)
-% xlabel('x')
-% ylabel('y')
-% grid on
-% legend(string(iter) + ' iterations')
-% colorbar
-% title('Helmholtz Equation, \lambda = ' + string(lambda) + ', F = F(x,y), \Delta = ' + string(delta))
+figure
+contour(x,y,SORu,15)
+xlabel('x')
+ylabel('y')
+grid on
+legend(string(SORiter) + ' iterations')
+colorbar
+title('Helmholtz Equation with SOR, ' + string(SORlambda) + ', \lambda = ' + string(lambda) +', F = F(x,y), \Delta = ' + string(delta))
 % 
-% figure
-% mesh(x,y,SORu)
-% xlabel('x')
-% ylabel('y')
-% zlabel('u')
-% grid on
-% legend(string(SORiter) + ' iterations','location','best')
-% view(45,30)
-% title('Helmholtz Equation with SOR, SOR\lambda = ' + string(SORlambda) + ', \lambda = ' + string(lambda) +', F = F(x,y), \Delta = ' + string(delta))
-% 
-% figure
-% contour(x,y,SORu,15)
-% xlabel('x')
-% ylabel('y')
-% grid on
-% legend(string(SORiter) + ' iterations')
-% colorbar
-% title('Helmholtz Equation with SOR, ' + string(SORlambda) + ', \lambda = ' + string(lambda) +', F = F(x,y), \Delta = ' + string(delta))
-% 
-% disp('Max u:')
-% max(max(u))
-% disp('Mean u:')
-% mean(mean(u))
-% disp('Min u:')
-% min(min(u))
-% 
-% disp('Max SORu:')
-% max(max(SORu))
-% disp('Mean SORu:')
-% mean(mean(SORu))
-% disp('Min SORu:')
-% min(min(SORu))
+disp('Max u:')
+max(max(u))
+disp('Mean u:')
+mean(mean(u))
+disp('Min u:')
+min(min(u))
+
+disp('Max SORu:')
+max(max(SORu))
+disp('Mean SORu:')
+mean(mean(SORu))
+disp('Min SORu:')
+min(min(SORu))
 
 % figure
 % mesh(x,y,F) 
